@@ -1,12 +1,13 @@
 import { NavLink as RouterNavLink, useNavigate, useLocation } from "react-router-dom";
-import { Activity, LayoutDashboard, Users, MessageSquare, Briefcase, BarChart3, LogOut } from "lucide-react";
+import { Activity, LayoutDashboard, Building2, Briefcase, CheckCircle2, Radio, BrainCircuit, LogOut } from "lucide-react";
 
 const links = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/dashboard/patients", label: "Patient Management", icon: Users },
-  { to: "/dashboard/feedback", label: "Feedback Stream", icon: MessageSquare },
+  { to: "/dashboard", label: "Home", icon: LayoutDashboard },
+  { to: "/dashboard/departments", label: "Departments", icon: Building2 },
   { to: "/dashboard/cases", label: "Case Management", icon: Briefcase },
-  { to: "/dashboard/analytics", label: "Admin Analytics", icon: BarChart3 },
+  { to: "/dashboard/resolved", label: "Resolved Cases", icon: CheckCircle2 },
+  { to: "/dashboard/feedback", label: "Live Feedback", icon: Radio },
+  { to: "/dashboard/predictive", label: "Predictive Intel", icon: BrainCircuit },
 ];
 
 const DashboardSidebar = () => {
@@ -22,11 +23,14 @@ const DashboardSidebar = () => {
 
       <nav className="flex-1 px-3 space-y-1">
         {links.map((l) => {
-          const active = location.pathname === l.to;
+          const active = l.to === "/dashboard"
+            ? location.pathname === "/dashboard"
+            : location.pathname.startsWith(l.to);
           return (
             <RouterNavLink
               key={l.to}
               to={l.to}
+              end={l.to === "/dashboard"}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                 active
                   ? "bg-primary-foreground/20 text-primary-foreground font-medium"

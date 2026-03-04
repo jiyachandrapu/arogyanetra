@@ -8,10 +8,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DashboardLayout from "./pages/DashboardLayout";
 import DashboardHome from "./pages/dashboard/DashboardHome";
-import PatientManagement from "./pages/dashboard/PatientManagement";
-import FeedbackStream from "./pages/dashboard/FeedbackStream";
+import Departments from "./pages/dashboard/Departments";
 import CaseManagement from "./pages/dashboard/CaseManagement";
-import AdminAnalytics from "./pages/dashboard/AdminAnalytics";
+import ResolvedCases from "./pages/dashboard/ResolvedCases";
+import LiveFeedback from "./pages/dashboard/LiveFeedback";
+import PredictiveIntel from "./pages/dashboard/PredictiveIntel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,10 +29,11 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
-            <Route path="patients" element={<PatientManagement />} />
-            <Route path="feedback" element={<FeedbackStream />} />
+            <Route path="departments" element={<Departments />} />
             <Route path="cases" element={<CaseManagement />} />
-            <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="resolved" element={<ResolvedCases />} />
+            <Route path="feedback" element={<LiveFeedback />} />
+            <Route path="predictive" element={<PredictiveIntel />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
