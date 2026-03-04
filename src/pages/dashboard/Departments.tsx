@@ -34,6 +34,13 @@ const trendIcon = (t: string) => {
   return <Minus className="h-4 w-4 text-muted-foreground" />;
 };
 
+const borderColor = (dept: Department) => {
+  if (dept.hasSurge) return "border-l-destructive";
+  if (dept.slaBreaches > 0) return "border-l-warning";
+  if (dept.sentimentTrend === "up") return "border-l-success";
+  return "border-l-primary";
+};
+
 const Departments = () => {
   const navigate = useNavigate();
 
@@ -50,7 +57,7 @@ const Departments = () => {
             <HoverCardTrigger asChild>
               <button
                 onClick={() => navigate(`/dashboard/cases?dept=${dept.id}`)}
-                className="bg-card rounded-xl border shadow-sm p-5 text-left hover:shadow-md hover:border-primary/30 transition-all duration-200 w-full group"
+                className={`bg-card rounded-xl border border-l-4 ${borderColor(dept)} shadow-sm p-5 text-left hover:shadow-md hover:border-primary/30 transition-all duration-200 w-full group`}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>

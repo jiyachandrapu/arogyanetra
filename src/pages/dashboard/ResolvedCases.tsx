@@ -52,10 +52,17 @@ const cases: ResolvedCase[] = [
 ];
 
 const stateStyle = (s: string) => {
-  if (s === "Stable") return "bg-success/10 text-success";
-  if (s === "Positive Reinforcement") return "bg-primary/10 text-primary";
-  if (s === "Recurring Issue") return "bg-warning/10 text-warning-foreground";
-  return "bg-destructive/10 text-destructive";
+  if (s === "Stable") return "bg-success/15 text-success";
+  if (s === "Positive Reinforcement") return "bg-primary/15 text-primary";
+  if (s === "Recurring Issue") return "bg-warning/15 text-warning-foreground";
+  return "bg-destructive/15 text-destructive";
+};
+
+const caseBorder = (c: ResolvedCase) => {
+  if (c.state === "Negative Spike") return "border-l-destructive";
+  if (c.state === "Recurring Issue") return "border-l-warning";
+  if (c.state === "Positive Reinforcement") return "border-l-success";
+  return "border-l-primary";
 };
 
 const ResolvedCases = () => {
@@ -70,7 +77,7 @@ const ResolvedCases = () => {
 
       <div className="space-y-3">
         {cases.map((c) => (
-          <div key={c.id} className={`bg-card rounded-xl border shadow-sm overflow-hidden ${c.hasSpikeWarning ? "border-warning/50" : ""}`}>
+          <div key={c.id} className={`bg-card rounded-xl border border-l-4 ${caseBorder(c)} shadow-sm overflow-hidden hover:shadow-md transition-shadow`}>
             <button
               className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-muted/30 transition-colors"
               onClick={() => setExpanded(expanded === c.id ? null : c.id)}
@@ -93,7 +100,7 @@ const ResolvedCases = () => {
             </button>
 
             {expanded === c.id && (
-              <div className="border-t px-5 py-5 space-y-4 bg-muted/10">
+              <div className="border-t px-5 py-5 space-y-4 bg-muted/20">
                 <div className="grid grid-cols-3 gap-3">
                   <div className="bg-card rounded-lg border p-3 text-center">
                     <p className="text-[11px] text-muted-foreground">New Complaints</p>
@@ -122,14 +129,14 @@ const ResolvedCases = () => {
                   <p className="text-xs font-medium text-muted-foreground mb-3">Sentiment Trajectory (14 days)</p>
                   <ResponsiveContainer width="100%" height={160}>
                     <LineChart data={c.sentimentData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(200 15% 90%)" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(210 18% 90%)" />
                       <XAxis dataKey="day" tick={{ fontSize: 11 }} />
                       <YAxis tick={{ fontSize: 11 }} domain={[0, 100]} />
                       <Tooltip />
                       <Line
                         type="monotone"
                         dataKey="score"
-                        stroke={c.sentimentChange >= 0 ? "hsl(145 45% 55%)" : "hsl(0 60% 65%)"}
+                        stroke={c.sentimentChange >= 0 ? "hsl(152 50% 45%)" : "hsl(0 65% 60%)"}
                         strokeWidth={2}
                         dot={{ r: 3 }}
                       />

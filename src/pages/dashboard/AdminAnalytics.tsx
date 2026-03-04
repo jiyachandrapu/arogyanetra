@@ -32,42 +32,42 @@ const AdminAnalytics = () => {
       <h1 className="font-display text-2xl font-bold">Admin Analytics</h1>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="bg-card rounded-xl border shadow-sm p-5">
+        <div className="bg-card rounded-xl border border-l-4 border-l-primary shadow-sm p-5">
           <h3 className="font-display font-semibold mb-4">Department Complaint Distribution</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={deptData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(200 15% 90%)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(210 18% 90%)" />
               <XAxis dataKey="department" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="complaints" fill="hsl(174 42% 65%)" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="complaints" fill="hsl(174 42% 55%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-card rounded-xl border shadow-sm p-5">
+        <div className="bg-card rounded-xl border border-l-4 border-l-success shadow-sm p-5">
           <h3 className="font-display font-semibold mb-4">Sentiment Trend</h3>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={sentimentTrend}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(200 15% 90%)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(210 18% 90%)" />
               <XAxis dataKey="day" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Line type="monotone" dataKey="positive" stroke="hsl(145 45% 65%)" strokeWidth={2} dot={{ r: 4 }} />
-              <Line type="monotone" dataKey="negative" stroke="hsl(0 60% 70%)" strokeWidth={2} dot={{ r: 4 }} />
+              <Line type="monotone" dataKey="positive" stroke="hsl(152 50% 45%)" strokeWidth={2} dot={{ r: 4 }} />
+              <Line type="monotone" dataKey="negative" stroke="hsl(0 65% 60%)" strokeWidth={2} dot={{ r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-card rounded-xl border shadow-sm p-5 lg:col-span-2">
+        <div className="bg-card rounded-xl border border-l-4 border-l-destructive shadow-sm p-5 lg:col-span-2">
           <h3 className="font-display font-semibold mb-4">SLA Breach Count by Department</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={slaBreaches}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(200 15% 90%)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(210 18% 90%)" />
               <XAxis dataKey="department" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="breaches" fill="hsl(0 60% 70%)" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="breaches" fill="hsl(0 65% 65%)" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

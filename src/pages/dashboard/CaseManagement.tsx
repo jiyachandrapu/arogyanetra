@@ -76,14 +76,21 @@ const clusters: Cluster[] = [
 ];
 
 const statusColor = (s: string) => {
-  if (s === "Open") return "bg-destructive/10 text-destructive";
-  if (s === "In Progress") return "bg-warning/10 text-warning-foreground";
-  return "bg-success/10 text-success";
+  if (s === "Open") return "bg-secondary/50 text-secondary-foreground";
+  if (s === "In Progress") return "bg-warning/15 text-warning-foreground";
+  return "bg-success/15 text-success";
 };
 
 const priorityColor = (p: string) => {
   if (p === "High") return "bg-destructive/10 text-destructive";
-  return "bg-warning/10 text-warning-foreground";
+  return "bg-warning/15 text-warning-foreground";
+};
+
+const clusterBorder = (c: Cluster) => {
+  if (c.priority === "High" && c.hasSurge) return "border-l-destructive";
+  if (c.priority === "High") return "border-l-destructive/60";
+  if (c.status === "In Progress") return "border-l-warning";
+  return "border-l-primary";
 };
 
 const timelineSteps = ["Detected", "Case Created", "Action Taken", "Resolved", "Impact Measured"];
@@ -112,7 +119,7 @@ const CaseManagement = () => {
 
       <div className="space-y-3">
         {filtered.map((c) => (
-          <div key={c.id} className="bg-card rounded-xl border shadow-sm overflow-hidden">
+          <div key={c.id} className={`bg-card rounded-xl border border-l-4 ${clusterBorder(c)} shadow-sm overflow-hidden hover:shadow-md transition-shadow`}>
             <button
               className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-muted/30 transition-colors"
               onClick={() => setExpanded(expanded === c.id ? null : c.id)}
@@ -141,7 +148,7 @@ const CaseManagement = () => {
             </button>
 
             {expanded === c.id && (
-              <div className="border-t px-5 py-5 space-y-5 bg-muted/10">
+              <div className="border-t px-5 py-5 space-y-5 bg-muted/20">
                 {/* Timeline */}
                 <div>
                   <p className="text-xs font-medium text-muted-foreground mb-2">Case Lifecycle</p>
@@ -199,7 +206,7 @@ const CaseManagement = () => {
                         )}
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] text-muted-foreground">Sentiment</span>
-                          <Progress value={m.sentimentScore} className="h-1.5 flex-1" />
+                          <Progress value={m.sentimentScore} className="h-1.5 flex-1 [&>div]:bg-destructive" />
                           <span className="text-[10px] font-medium text-destructive">{m.sentimentScore}%</span>
                         </div>
                       </div>
