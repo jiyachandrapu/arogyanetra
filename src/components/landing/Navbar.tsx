@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Activity, Menu, X } from "lucide-react";
+import { HeartPulse, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -10,8 +10,10 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         <Link to="/" className="flex items-center gap-2">
-          <Activity className="h-7 w-7 text-primary" />
-          <span className="font-display font-bold text-lg text-foreground">AAROGYA NETRA</span>
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <HeartPulse className="h-5 w-5 text-primary-foreground" />
+          </div>
+          <span className="font-bold text-lg text-foreground tracking-tight">AAROGYA <span className="text-primary">NETRA</span></span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
@@ -19,7 +21,7 @@ const Navbar = () => {
           <a href="#solution" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Solution</a>
           <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How It Works</a>
           <Link to="/login">
-            <Button variant="ghost" size="sm">Login</Button>
+            <Button variant="ghost" size="sm" className="font-semibold">Login</Button>
           </Link>
           <Link to="/register">
             <Button size="sm">Register Hospital</Button>
