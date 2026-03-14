@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ChevronDown, ChevronUp, TrendingUp, Star } from "lucide-react";
 
-interface Message {
+export interface FeedbackMessage {
   id: number;
   source: string;
   language: string;
@@ -14,32 +14,17 @@ interface Message {
   sentiment: "positive" | "negative";
 }
 
-const allMessages: Message[] = [
-  { id: 1, source: "WhatsApp", language: "Tanglish", department: "OPD", time: "10 mins ago", text: "OPD la romba neram wait pannenom. Doctor 2 hours late ah vandhar.", sentimentScore: 15, sentiment: "negative" },
-  { id: 3, source: "Email", language: "English", department: "Nursing", time: "1 hour ago", text: "Very happy with the nursing staff in ward 3. They were attentive and caring.", sentimentScore: 88, sentiment: "positive" },
-  { id: 4, source: "WhatsApp", language: "Tamil", department: "Pharmacy", time: "2 hours ago", text: "மருந்துக்கடையில் மருந்து இல்லை என்று சொன்னார்கள்.", sentimentScore: 20, sentiment: "negative" },
-  { id: 6, source: "Email", language: "English", department: "OPD", time: "4 hours ago", text: "Overall good experience. The doctor explained everything well. Thank you.", sentimentScore: 85, sentiment: "positive" },
-  { id: 7, source: "WhatsApp", language: "English", department: "Emergency", time: "5 hours ago", text: "Emergency room staff was incredibly fast and professional. Saved my father's life.", sentimentScore: 95, sentiment: "positive" },
-  { id: 8, source: "Email", language: "English", department: "Radiology", time: "6 hours ago", text: "X-ray results were delivered within 30 minutes. Very efficient.", sentimentScore: 82, sentiment: "positive" },
-  { id: 9, source: "WhatsApp", language: "English", department: "Billing", time: "7 hours ago", text: "Tax amount was wrongly calculated in my bill. Had to argue for 30 min.", sentimentScore: 12, sentiment: "negative" },
-  { id: 10, source: "Email", language: "English", department: "Cardiology", time: "8 hours ago", text: "Dr. Mehta was thorough and patient. Best cardiac consultation I've had.", sentimentScore: 92, sentiment: "positive" },
-];
-
-const positiveInsights = [
-  { department: "Nursing", insight: "Staff appreciation spike — 12 positive messages this week", icon: Star },
-  { department: "Emergency", insight: "Emergency response praise — consistent high satisfaction", icon: TrendingUp },
-  { department: "Cardiology", insight: "Patient satisfaction score trending upward +18%", icon: TrendingUp },
-];
-
-const positiveMessages = allMessages.filter(m => m.sentiment === "positive");
-const negativeMessages = allMessages.filter(m => m.sentiment === "negative");
+export interface PositiveInsight {
+  department: string;
+  insight: string;
+}
 
 const sourceBadgeColor = (s: string) => {
   if (s === "WhatsApp") return "bg-success/15 text-success";
   return "bg-secondary/50 text-secondary-foreground";
 };
 
-const MessageCard = ({ m }: { m: Message }) => (
+const MessageCard = ({ m }: { m: FeedbackMessage }) => (
   <div className="bg-card rounded-lg border p-3 space-y-2">
     <div className="flex items-center gap-2 flex-wrap">
       <Badge variant="outline" className={`text-[10px] ${sourceBadgeColor(m.source)}`}>{m.source}</Badge>
@@ -63,6 +48,13 @@ const LiveFeedback = () => {
   const [showPositive, setShowPositive] = useState(true);
   const [showNegative, setShowNegative] = useState(true);
 
+  // Will be populated from backend API
+  const allMessages: FeedbackMessage[] = [];
+  const positiveInsights: PositiveInsight[] = [];
+
+  const positiveMessages = allMessages.filter(m => m.sentiment === "positive");
+  const negativeMessages = allMessages.filter(m => m.sentiment === "negative");
+
   return (
     <div className="space-y-6">
       <div>
@@ -76,17 +68,21 @@ const LiveFeedback = () => {
           <Star className="h-4 w-4 text-success" />
           Positive Performance Insights
         </h2>
-        <div className="grid sm:grid-cols-3 gap-3">
-          {positiveInsights.map((pi, i) => (
-            <div key={i} className="bg-success/5 rounded-lg border border-success/20 p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <pi.icon className="h-3.5 w-3.5 text-success" />
-                <span className="text-xs font-semibold text-success">{pi.department}</span>
+        {positiveInsights.length > 0 ? (
+          <div className="grid sm:grid-cols-3 gap-3">
+            {positiveInsights.map((pi, i) => (
+              <div key={i} className="bg-success/5 rounded-lg border border-success/20 p-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <TrendingUp className="h-3.5 w-3.5 text-success" />
+                  <span className="text-xs font-semibold text-success">{pi.department}</span>
+                </div>
+                <p className="text-[11px] text-muted-foreground">{pi.insight}</p>
               </div>
-              <p className="text-[11px] text-muted-foreground">{pi.insight}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">No positive insights yet. They will appear as positive feedback accumulates.</p>
+        )}
       </div>
 
       {/* Two columns */}
@@ -98,9 +94,15 @@ const LiveFeedback = () => {
             {showPositive ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
           </button>
           {showPositive && (
-            <div className="space-y-2">
-              {positiveMessages.map(m => <MessageCard key={m.id} m={m} />)}
-            </div>
+            positiveMessages.length > 0 ? (
+              <div className="space-y-2">
+                {positiveMessages.map(m => <MessageCard key={m.id} m={m} />)}
+              </div>
+            ) : (
+              <div className="bg-card rounded-lg border p-6 text-center">
+                <p className="text-sm text-muted-foreground">No positive feedback yet.</p>
+              </div>
+            )
           )}
         </div>
 
@@ -111,9 +113,15 @@ const LiveFeedback = () => {
             {showNegative ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
           </button>
           {showNegative && (
-            <div className="space-y-2">
-              {negativeMessages.map(m => <MessageCard key={m.id} m={m} />)}
-            </div>
+            negativeMessages.length > 0 ? (
+              <div className="space-y-2">
+                {negativeMessages.map(m => <MessageCard key={m.id} m={m} />)}
+              </div>
+            ) : (
+              <div className="bg-card rounded-lg border p-6 text-center">
+                <p className="text-sm text-muted-foreground">No negative feedback yet.</p>
+              </div>
+            )
           )}
         </div>
       </div>
