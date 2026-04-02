@@ -18,7 +18,7 @@ const DashboardSidebar = () => {
 
   return (
     <aside className={`${collapsed ? "w-[72px]" : "w-64"} min-h-screen bg-sidebar flex flex-col shrink-0 transition-all duration-300 relative`}>
-      {/* Logo + Toggle */}
+      {/* Logo */}
       <div className="flex items-center justify-between px-4 py-4 border-b border-sidebar-border">
         <div className={`flex items-center gap-2.5 ${collapsed ? "justify-center w-full" : ""}`}>
           <div className="w-9 h-9 rounded-xl bg-primary/30 flex items-center justify-center shrink-0">
@@ -31,11 +31,16 @@ const DashboardSidebar = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Collapse Toggle */}
+      <div className="px-3 pt-3 pb-1">
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className={`text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors ${collapsed ? "absolute -right-3 top-5 bg-sidebar rounded-full p-1 border border-sidebar-border shadow-sm" : ""}`}
+          className={`flex items-center gap-2 w-full px-3 py-2 rounded-xl text-[13px] text-sidebar-foreground/60 hover:bg-sidebar-accent/30 hover:text-sidebar-foreground transition-all duration-200 ${collapsed ? "justify-center px-0" : ""}`}
         >
-          {collapsed ? <Menu className="h-4 w-4" /> : <X className="h-4 w-4" />}
+          <Menu className="h-[18px] w-[18px] shrink-0" />
+          {!collapsed && <span>{collapsed ? "Expand" : "Collapse"}</span>}
         </button>
       </div>
 
