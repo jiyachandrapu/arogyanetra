@@ -8,16 +8,23 @@ const solutions = [
 ];
 
 const SolutionSection = () => (
-  <section id="solution" className="py-20">
-    <div className="container mx-auto px-4">
-      <h2 className="font-display text-3xl font-bold text-center mb-12">The Solution</h2>
+  <section id="solution" className="py-20 relative overflow-hidden">
+    <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
+    <div className="container mx-auto px-4 relative">
+      <div className="text-center mb-12 animate-slide-up">
+        <span className="text-sm font-semibold text-primary uppercase tracking-wider">What We Offer</span>
+        <h2 className="text-3xl font-bold mt-2">The Solution</h2>
+      </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {solutions.map((s) => (
-          <div key={s.title} className="bg-card rounded-xl p-6 border shadow-sm space-y-3 text-center">
-            <div className="mx-auto w-12 h-12 rounded-full bg-accent flex items-center justify-center">
-              <s.icon className="h-6 w-6 text-accent-foreground" />
+        {solutions.map((s, i) => (
+          <div
+            key={s.title}
+            className={`bg-card rounded-xl p-6 border shadow-sm space-y-3 text-center hover-lift hover-glow cursor-default group animate-slide-up-delay-${i + 1}`}
+          >
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <s.icon className="h-7 w-7 text-primary group-hover:animate-bounce-subtle" />
             </div>
-            <h3 className="font-display font-semibold">{s.title}</h3>
+            <h3 className="font-semibold">{s.title}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
           </div>
         ))}
