@@ -19,14 +19,23 @@ const problems = [
 ];
 
 const ProblemSection = () => (
-  <section id="problem" className="py-20 bg-card">
-    <div className="container mx-auto px-4">
-      <h2 className="font-display text-3xl font-bold text-center mb-12">The Problem</h2>
+  <section id="problem" className="py-20 bg-card relative overflow-hidden">
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-destructive/5 rounded-full blur-3xl" />
+    <div className="container mx-auto px-4 relative">
+      <div className="text-center mb-12 animate-slide-up">
+        <span className="text-sm font-semibold text-destructive/80 uppercase tracking-wider">Why It Matters</span>
+        <h2 className="text-3xl font-bold mt-2">The Problem</h2>
+      </div>
       <div className="grid md:grid-cols-3 gap-6">
-        {problems.map((p) => (
-          <div key={p.title} className="bg-background rounded-xl p-6 border shadow-sm space-y-3">
-            <p.icon className="h-10 w-10 text-destructive/80" />
-            <h3 className="font-display font-semibold text-lg">{p.title}</h3>
+        {problems.map((p, i) => (
+          <div
+            key={p.title}
+            className={`bg-background rounded-xl p-6 border shadow-sm space-y-3 hover-lift hover-glow cursor-default group animate-slide-up-delay-${i + 1}`}
+          >
+            <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <p.icon className="h-6 w-6 text-destructive/80" />
+            </div>
+            <h3 className="font-semibold text-lg">{p.title}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{p.description}</p>
           </div>
         ))}
