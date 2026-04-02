@@ -2,24 +2,21 @@ import { MessageSquare, Briefcase, AlertTriangle, ArrowRight, TrendingDown, Buil
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-interface StatItem {
-  label: string;
-  value: number;
-  icon: React.ElementType;
-  color: string;
-  borderColor: string;
-}
+const stats = [
+  { label: "Total Feedback", value: 1247, icon: MessageSquare, color: "text-primary", borderColor: "border-l-primary" },
+  { label: "Active Departments", value: 8, icon: Building2, color: "text-secondary-foreground", borderColor: "border-l-secondary" },
+  { label: "Open Cases", value: 23, icon: Briefcase, color: "text-warning-foreground", borderColor: "border-l-warning" },
+  { label: "SLA Breaches", value: 4, icon: AlertTriangle, color: "text-destructive", borderColor: "border-l-destructive" },
+];
 
-interface AlertItem {
-  text: string;
-  dept: string;
-}
+const alerts = [
+  { text: "Billing complaints surged 40% in the last 6 hours — 12 new negative messages detected.", dept: "billing" },
+  { text: "OPD wait-time sentiment dropped sharply after 2 PM — 8 complaints in 3 hours.", dept: "opd" },
+  { text: "Pharmacy stock-out complaints rising — 5 new messages in 2 hours.", dept: "pharmacy" },
+];
 
 const DashboardHome = () => {
-  // These will be populated from the backend API
-  const stats: StatItem[] = [];
-  const alerts: AlertItem[] = [];
-  const whatsappNumber = "";
+  const whatsappNumber = "+91 98765 43210";
 
   return (
     <div className="space-y-6">
@@ -27,7 +24,7 @@ const DashboardHome = () => {
 
       {/* Summary Cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.length > 0 ? stats.map((s) => (
+        {stats.map((s) => (
           <div key={s.label} className={`bg-card rounded-xl border border-l-4 ${s.borderColor} shadow-sm p-5 flex items-center gap-4 cursor-default hover:shadow-md transition-shadow`}>
             <div className="w-11 h-11 rounded-lg bg-accent flex items-center justify-center">
               <s.icon className={`h-5 w-5 ${s.color}`} />
@@ -37,26 +34,7 @@ const DashboardHome = () => {
               <p className="text-xs text-muted-foreground">{s.label}</p>
             </div>
           </div>
-        )) : (
-          <>
-            {[
-              { label: "Total Feedback", icon: MessageSquare, borderColor: "border-l-primary", color: "text-primary" },
-              { label: "Active Departments", icon: Building2, borderColor: "border-l-secondary", color: "text-secondary-foreground" },
-              { label: "Open Cases", icon: Briefcase, borderColor: "border-l-warning", color: "text-warning-foreground" },
-              { label: "SLA Breaches", icon: AlertTriangle, borderColor: "border-l-destructive", color: "text-destructive" },
-            ].map((s) => (
-              <div key={s.label} className={`bg-card rounded-xl border border-l-4 ${s.borderColor} shadow-sm p-5 flex items-center gap-4`}>
-                <div className="w-11 h-11 rounded-lg bg-accent flex items-center justify-center">
-                  <s.icon className={`h-5 w-5 ${s.color}`} />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-muted-foreground">—</p>
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
-                </div>
-              </div>
-            ))}
-          </>
-        )}
+        ))}
       </div>
 
       {/* WhatsApp Bot Card */}
@@ -66,7 +44,7 @@ const DashboardHome = () => {
         </div>
         <div className="flex-1">
           <p className="font-semibold text-sm">Your Hospital WhatsApp Bot</p>
-          <p className="text-sm text-muted-foreground">{whatsappNumber || "Not configured"}</p>
+          <p className="text-sm text-muted-foreground">{whatsappNumber}</p>
           <p className="text-xs text-primary mt-0.5">Patients and guardians can send feedback directly to this number. All messages are automatically analyzed and routed.</p>
         </div>
       </div>
@@ -77,25 +55,21 @@ const DashboardHome = () => {
           <AlertTriangle className="h-4 w-4 text-warning" />
           Sentiment Spike Alerts
         </h2>
-        {alerts.length > 0 ? (
-          <div className="space-y-3">
-            {alerts.map((a, i) => (
-              <div key={i} className="bg-warning/10 rounded-lg p-3 flex items-start justify-between gap-3">
-                <div className="flex items-start gap-2">
-                  <TrendingDown className="h-4 w-4 text-warning mt-0.5 shrink-0" />
-                  <p className="text-sm text-foreground">{a.text}</p>
-                </div>
-                <Link to={`/dashboard/cases?dept=${a.dept}`}>
-                  <Button variant="outline" size="sm" className="shrink-0 gap-1">
-                    View & Take Action <ArrowRight className="h-3 w-3" />
-                  </Button>
-                </Link>
+        <div className="space-y-3">
+          {alerts.map((a, i) => (
+            <div key={i} className="bg-warning/10 rounded-lg p-3 flex items-start justify-between gap-3">
+              <div className="flex items-start gap-2">
+                <TrendingDown className="h-4 w-4 text-warning mt-0.5 shrink-0" />
+                <p className="text-sm text-foreground">{a.text}</p>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">No active spike alerts. Alerts will appear here when sentiment anomalies are detected.</p>
-        )}
+              <Link to={`/dashboard/cases?dept=${a.dept}`}>
+                <Button variant="outline" size="sm" className="shrink-0 gap-1">
+                  View & Take Action <ArrowRight className="h-3 w-3" />
+                </Button>
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Quick Links */}
