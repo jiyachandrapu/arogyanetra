@@ -25,6 +25,7 @@ export interface Cluster {
   hasSurge: boolean;
   complaintCount: number;
   slaSeconds: number;
+  slaRunning: boolean;
   sentimentScore: number;
   slaStatus: string;
   timeline: ("Detected" | "Case Created" | "Action Taken" | "Resolved")[];
@@ -34,7 +35,7 @@ export interface Cluster {
 const initialClusters: Cluster[] = [
   {
     id: "1", caseId: "CASE-001", title: "Excessive Wait Time in OPD", department: "Outpatient Department", deptId: "opd",
-    priority: "High", status: "Open", hasSurge: true, complaintCount: 14, slaSeconds: 15600, sentimentScore: 22,
+    priority: "High", status: "Open", hasSurge: true, complaintCount: 14, slaSeconds: 15600, slaRunning: false, sentimentScore: 22,
     slaStatus: "On Track",
     timeline: ["Detected", "Case Created"],
     messages: [
@@ -44,7 +45,7 @@ const initialClusters: Cluster[] = [
   },
   {
     id: "2", caseId: "CASE-002", title: "Billing Overcharge Complaints", department: "Billing & Accounts", deptId: "billing",
-    priority: "High", status: "In Progress", hasSurge: true, complaintCount: 9, slaSeconds: 7800, sentimentScore: 30,
+    priority: "High", status: "In Progress", hasSurge: true, complaintCount: 9, slaSeconds: 7800, slaRunning: false, sentimentScore: 30,
     slaStatus: "At Risk",
     timeline: ["Detected", "Case Created", "Action Taken"],
     messages: [
@@ -54,7 +55,7 @@ const initialClusters: Cluster[] = [
   },
   {
     id: "3", caseId: "CASE-003", title: "Pharmacy Stock-Out Issues", department: "Pharmacy", deptId: "pharmacy",
-    priority: "Medium", status: "Open", hasSurge: false, complaintCount: 6, slaSeconds: 64800, sentimentScore: 40,
+    priority: "Medium", status: "Open", hasSurge: false, complaintCount: 6, slaSeconds: 64800, slaRunning: false, sentimentScore: 40,
     slaStatus: "On Track",
     timeline: ["Detected", "Case Created"],
     messages: [
@@ -63,7 +64,7 @@ const initialClusters: Cluster[] = [
   },
   {
     id: "4", caseId: "CASE-004", title: "Emergency Triage Delays", department: "Emergency Department", deptId: "emergency",
-    priority: "High", status: "Open", hasSurge: true, complaintCount: 11, slaSeconds: 6300, sentimentScore: 15,
+    priority: "High", status: "Open", hasSurge: true, complaintCount: 11, slaSeconds: 6300, slaRunning: false, sentimentScore: 15,
     slaStatus: "At Risk",
     timeline: ["Detected", "Case Created"],
     messages: [
@@ -73,7 +74,7 @@ const initialClusters: Cluster[] = [
   },
   {
     id: "5", caseId: "CASE-005", title: "Cleanliness Issues in Ward B", department: "Facilities & Maintenance", deptId: "facilities",
-    priority: "Medium", status: "In Progress", hasSurge: false, complaintCount: 5, slaSeconds: 43200, sentimentScore: 38,
+    priority: "Medium", status: "In Progress", hasSurge: false, complaintCount: 5, slaSeconds: 43200, slaRunning: false, sentimentScore: 38,
     slaStatus: "On Track",
     timeline: ["Detected", "Case Created", "Action Taken"],
     messages: [
@@ -123,7 +124,7 @@ const CaseManagement = () => {
     const interval = setInterval(() => {
       setClusters(prev => prev.map(c => {
         if (c.status === "Resolved" || c.status === "SLA Breached") return c;
-        if (!c.timeline.includes("Action Taken")) return c;
+        if (!c.slaRunning) return c;
         const newSeconds = c.slaSeconds - 1;
         if (newSeconds <= 0) {
           return { ...c, slaSeconds: 0, status: "SLA Breached" as const, slaStatus: "Breached" };
@@ -146,6 +147,7 @@ const CaseManagement = () => {
           ...c,
           status: "In Progress" as const,
           timeline: [...c.timeline, "Action Taken" as const],
+          slaRunning: true,
         };
       }
       return c;
