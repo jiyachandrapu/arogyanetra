@@ -74,7 +74,7 @@ const initialClusters: Cluster[] = [
   },
   {
     id: "5", caseId: "CASE-005", title: "Cleanliness Issues in Ward B", department: "Facilities & Maintenance", deptId: "facilities",
-    priority: "Medium", status: "In Progress", hasSurge: false, complaintCount: 5, slaSeconds: 43200, sentimentScore: 38,
+    priority: "Medium", status: "In Progress", hasSurge: false, complaintCount: 5, slaSeconds: 43200, slaRunning: false, sentimentScore: 38,
     slaStatus: "On Track",
     timeline: ["Detected", "Case Created", "Action Taken"],
     messages: [
