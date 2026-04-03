@@ -25,6 +25,7 @@ export interface Cluster {
   hasSurge: boolean;
   complaintCount: number;
   slaSeconds: number;
+  slaRunning: boolean;
   sentimentScore: number;
   slaStatus: string;
   timeline: ("Detected" | "Case Created" | "Action Taken" | "Resolved")[];
