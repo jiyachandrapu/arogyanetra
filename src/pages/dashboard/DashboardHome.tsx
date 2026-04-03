@@ -16,7 +16,7 @@ const alerts = [
 ];
 
 const DashboardHome = () => {
-  const whatsappNumber = "+91 98765 43210";
+  const whatsappNumber = "+1 (415) 523-8886";
 
   return (
     <div className="space-y-6">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink as RouterNavLink, useNavigate, useLocation } from "react-router-dom";
-import { HeartPulse, LayoutDashboard, Building2, Briefcase, CheckCircle2, Radio, BrainCircuit, LogOut, Menu, X } from "lucide-react";
+import { HeartPulse, LayoutDashboard, Building2, Briefcase, CheckCircle2, Radio, BrainCircuit, LogOut } from "lucide-react";
 
 const links = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -11,10 +11,14 @@ const links = [
   { to: "/dashboard/predictive", label: "Predictive Intel", icon: BrainCircuit },
 ];
 
-const DashboardSidebar = () => {
+export interface DashboardSidebarProps {
+  collapsed: boolean;
+  onToggle: () => void;
+}
+
+const DashboardSidebar = ({ collapsed, onToggle }: DashboardSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <aside className={`${collapsed ? "w-[72px]" : "w-64"} min-h-screen bg-sidebar flex flex-col shrink-0 transition-all duration-300 relative`}>
@@ -31,17 +35,6 @@ const DashboardSidebar = () => {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Collapse Toggle */}
-      <div className="px-3 pt-3 pb-1">
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className={`flex items-center gap-2 w-full px-3 py-2 rounded-xl text-[13px] text-sidebar-foreground/60 hover:bg-sidebar-accent/30 hover:text-sidebar-foreground transition-all duration-200 ${collapsed ? "justify-center px-0" : ""}`}
-        >
-          <Menu className="h-[18px] w-[18px] shrink-0" />
-          {!collapsed && <span>{collapsed ? "Expand" : "Collapse"}</span>}
-        </button>
       </div>
 
       <nav className="flex-1 px-3 pt-4 space-y-1">
