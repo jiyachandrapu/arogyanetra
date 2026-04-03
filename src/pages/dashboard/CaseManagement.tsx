@@ -32,57 +32,6 @@ export interface Cluster {
   messages: FeedbackMessage[];
 }
 
-const initialClusters: Cluster[] = [
-  {
-    id: "1", caseId: "CASE-001", title: "Excessive Wait Time in OPD", department: "Outpatient Department", deptId: "opd",
-    priority: "High", status: "Open", hasSurge: true, complaintCount: 14, slaSeconds: 15600, slaRunning: false, sentimentScore: 22,
-    slaStatus: "On Track",
-    timeline: ["Detected", "Case Created"],
-    messages: [
-      { source: "WhatsApp", language: "Hindi", time: "2:45 PM", text: "3 ghante se wait kar raha hoon, koi response nahi", translated: "Waiting for 3 hours, no response", sentimentScore: 18 },
-      { source: "Email", language: "English", time: "3:10 PM", text: "The wait time at OPD is unacceptable. I've been here since morning.", sentimentScore: 25 },
-    ],
-  },
-  {
-    id: "2", caseId: "CASE-002", title: "Billing Overcharge Complaints", department: "Billing & Accounts", deptId: "billing",
-    priority: "High", status: "In Progress", hasSurge: true, complaintCount: 9, slaSeconds: 7800, slaRunning: false, sentimentScore: 30,
-    slaStatus: "At Risk",
-    timeline: ["Detected", "Case Created", "Action Taken"],
-    messages: [
-      { source: "WhatsApp", language: "English", time: "11:30 AM", text: "I was charged ₹5000 extra for a basic blood test. This is fraud!", sentimentScore: 12 },
-      { source: "WhatsApp", language: "Tamil", time: "12:15 PM", text: "Bill la extra amount potrukanga", translated: "Extra amount added in the bill", sentimentScore: 28 },
-    ],
-  },
-  {
-    id: "3", caseId: "CASE-003", title: "Pharmacy Stock-Out Issues", department: "Pharmacy", deptId: "pharmacy",
-    priority: "Medium", status: "Open", hasSurge: false, complaintCount: 6, slaSeconds: 64800, slaRunning: false, sentimentScore: 40,
-    slaStatus: "On Track",
-    timeline: ["Detected", "Case Created"],
-    messages: [
-      { source: "Email", language: "English", time: "9:00 AM", text: "Common medicines like paracetamol are out of stock. Had to buy from outside.", sentimentScore: 35 },
-    ],
-  },
-  {
-    id: "4", caseId: "CASE-004", title: "Emergency Triage Delays", department: "Emergency Department", deptId: "emergency",
-    priority: "High", status: "Open", hasSurge: true, complaintCount: 11, slaSeconds: 6300, slaRunning: false, sentimentScore: 15,
-    slaStatus: "At Risk",
-    timeline: ["Detected", "Case Created"],
-    messages: [
-      { source: "WhatsApp", language: "English", time: "4:30 PM", text: "My father was having chest pain and we waited 40 minutes before anyone attended!", sentimentScore: 10 },
-      { source: "WhatsApp", language: "Hindi", time: "5:00 PM", text: "Emergency mein bhi koi nahi dekh raha", translated: "Nobody is attending even in emergency", sentimentScore: 15 },
-    ],
-  },
-  {
-    id: "5", caseId: "CASE-005", title: "Cleanliness Issues in Ward B", department: "Facilities & Maintenance", deptId: "facilities",
-    priority: "Medium", status: "In Progress", hasSurge: false, complaintCount: 5, slaSeconds: 43200, slaRunning: false, sentimentScore: 38,
-    slaStatus: "On Track",
-    timeline: ["Detected", "Case Created", "Action Taken"],
-    messages: [
-      { source: "Email", language: "English", time: "8:00 AM", text: "The washrooms in ward B are extremely dirty. Needs immediate attention.", sentimentScore: 32 },
-    ],
-  },
-];
-
 const formatTime = (seconds: number) => {
   if (seconds <= 0) return "0h 0m";
   const h = Math.floor(seconds / 3600);
@@ -113,7 +62,7 @@ const clusterBorder = (c: Cluster) => {
 const timelineSteps: ("Detected" | "Case Created" | "Action Taken" | "Resolved")[] = ["Detected", "Case Created", "Action Taken", "Resolved"];
 
 const CaseManagement = () => {
-  const [clusters, setClusters] = useState<Cluster[]>(initialClusters);
+  const [clusters, setClusters] = useState<Cluster[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -163,6 +112,7 @@ const CaseManagement = () => {
           status: "Resolved" as const,
           timeline: [...c.timeline, "Resolved" as const],
           slaStatus: "Resolved",
+          slaRunning: false,
         };
       }
       return c;
@@ -196,138 +146,144 @@ const CaseManagement = () => {
         </div>
       )}
 
-      <div className="space-y-3">
-        {filtered.map((c) => (
-          <div key={c.id} className={`bg-card rounded-xl border border-l-4 ${clusterBorder(c)} shadow-sm overflow-hidden hover:shadow-md transition-shadow`}>
-            <button
-              className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-muted/30 transition-colors"
-              onClick={() => setExpanded(expanded === c.id ? null : c.id)}
-            >
-              <div className="space-y-1.5 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-semibold text-sm">{c.title}</h3>
-                  {c.hasSurge && (
-                    <Badge variant="outline" className="bg-destructive/10 text-destructive text-[10px] px-1.5 py-0 animate-pulse">
-                      <AlertTriangle className="h-3 w-3 mr-0.5" /> SPIKE
-                    </Badge>
-                  )}
-                  {c.status === "SLA Breached" && (
-                    <Badge variant="outline" className="bg-destructive/15 text-destructive text-[10px] px-1.5 py-0">
-                      <XCircle className="h-3 w-3 mr-0.5" /> SLA BREACHED
-                    </Badge>
-                  )}
+      {filtered.length > 0 ? (
+        <div className="space-y-3">
+          {filtered.map((c) => (
+            <div key={c.id} className={`bg-card rounded-xl border border-l-4 ${clusterBorder(c)} shadow-sm overflow-hidden hover:shadow-md transition-shadow`}>
+              <button
+                className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-muted/30 transition-colors"
+                onClick={() => setExpanded(expanded === c.id ? null : c.id)}
+              >
+                <div className="space-y-1.5 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-semibold text-sm">{c.title}</h3>
+                    {c.hasSurge && (
+                      <Badge variant="outline" className="bg-destructive/10 text-destructive text-[10px] px-1.5 py-0 animate-pulse">
+                        <AlertTriangle className="h-3 w-3 mr-0.5" /> SPIKE
+                      </Badge>
+                    )}
+                    {c.status === "SLA Breached" && (
+                      <Badge variant="outline" className="bg-destructive/15 text-destructive text-[10px] px-1.5 py-0">
+                        <XCircle className="h-3 w-3 mr-0.5" /> SLA BREACHED
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
+                    <span>{c.department}</span>
+                    <span>{c.caseId}</span>
+                    <span>Complaints: {c.complaintCount}</span>
+                    <span className={c.slaSeconds < 3600 && c.status !== "Resolved" && c.status !== "SLA Breached" ? "text-destructive font-medium" : ""}>
+                      SLA: {c.status === "Resolved" ? "Resolved" : c.status === "SLA Breached" ? "Breached" : formatTime(c.slaSeconds)}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
-                  <span>{c.department}</span>
-                  <span>{c.caseId}</span>
-                  <span>Complaints: {c.complaintCount}</span>
-                  <span className={c.slaSeconds < 3600 && c.status !== "Resolved" && c.status !== "SLA Breached" ? "text-destructive font-medium" : ""}>
-                    SLA: {c.status === "Resolved" ? "Resolved" : c.status === "SLA Breached" ? "Breached" : formatTime(c.slaSeconds)}
-                  </span>
+                <div className="flex items-center gap-2 shrink-0 ml-3">
+                  <Badge variant="outline" className={priorityColor(c.priority)}>{c.priority}</Badge>
+                  <Badge variant="outline" className={statusColor(c.status)}>{c.status}</Badge>
+                  {expanded === c.id ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
                 </div>
-              </div>
-              <div className="flex items-center gap-2 shrink-0 ml-3">
-                <Badge variant="outline" className={priorityColor(c.priority)}>{c.priority}</Badge>
-                <Badge variant="outline" className={statusColor(c.status)}>{c.status}</Badge>
-                {expanded === c.id ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-              </div>
-            </button>
+              </button>
 
-            {expanded === c.id && (
-              <div className="border-t px-5 py-5 space-y-5 bg-muted/20">
-                {/* Timeline */}
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-2">Case Lifecycle</p>
-                  <div className="flex items-center gap-0 flex-wrap">
-                    {timelineSteps.map((step, i) => {
-                      const reached = c.timeline.includes(step);
-                      return (
-                        <div key={step} className="flex items-center">
-                          <div className={`px-3 py-1.5 rounded-full text-[11px] font-medium border ${reached ? "bg-primary/15 text-primary border-primary/30" : "bg-muted text-muted-foreground border-border"}`}>
-                            {step}
+              {expanded === c.id && (
+                <div className="border-t px-5 py-5 space-y-5 bg-muted/20">
+                  {/* Timeline */}
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground mb-2">Case Lifecycle</p>
+                    <div className="flex items-center gap-0 flex-wrap">
+                      {timelineSteps.map((step, i) => {
+                        const reached = c.timeline.includes(step);
+                        return (
+                          <div key={step} className="flex items-center">
+                            <div className={`px-3 py-1.5 rounded-full text-[11px] font-medium border ${reached ? "bg-primary/15 text-primary border-primary/30" : "bg-muted text-muted-foreground border-border"}`}>
+                              {step}
+                            </div>
+                            {i < timelineSteps.length - 1 && (
+                              <div className={`w-6 h-px ${reached && c.timeline.includes(timelineSteps[i + 1]) ? "bg-primary/40" : "bg-border"}`} />
+                            )}
                           </div>
-                          {i < timelineSteps.length - 1 && (
-                            <div className={`w-6 h-px ${reached && c.timeline.includes(timelineSteps[i + 1]) ? "bg-primary/40" : "bg-border"}`} />
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Case Info */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div className="bg-card rounded-lg border p-3">
+                      <p className="text-[11px] text-muted-foreground">Case ID</p>
+                      <p className="text-sm font-semibold">{c.caseId}</p>
+                    </div>
+                    <div className="bg-card rounded-lg border p-3">
+                      <p className="text-[11px] text-muted-foreground">Department</p>
+                      <p className="text-sm font-semibold">{c.department}</p>
+                    </div>
+                    <div className="bg-card rounded-lg border p-3">
+                      <p className="text-[11px] text-muted-foreground">SLA Status</p>
+                      <p className={`text-sm font-semibold ${c.slaStatus === "At Risk" || c.slaStatus === "Breached" ? "text-destructive" : "text-success"}`}>{c.slaStatus}</p>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  {c.status !== "Resolved" && c.status !== "SLA Breached" && (
+                    <div className="flex items-center gap-3">
+                      {c.status === "Open" && c.timeline.includes("Case Created") && (
+                        <Button size="sm" className="gap-1.5" onClick={() => handleAction(c.id)}>
+                          <Play className="h-3.5 w-3.5" /> Mark Action Taken
+                        </Button>
+                      )}
+                      {c.status === "In Progress" && c.timeline.includes("Action Taken") && (
+                        <Button size="sm" variant="outline" className="gap-1.5 border-success text-success hover:bg-success/10" onClick={() => handleResolve(c.id)}>
+                          <CheckCircle2 className="h-3.5 w-3.5" /> Mark Resolved
+                        </Button>
+                      )}
+                      {c.slaRunning && (
+                        <span className={`text-xs font-medium ${c.slaSeconds < 3600 ? "text-destructive" : "text-muted-foreground"}`}>
+                          ⏱ SLA Timer: {formatTime(c.slaSeconds)}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {c.status === "SLA Breached" && (
+                    <div className="bg-destructive/10 rounded-lg p-3 flex items-center gap-2">
+                      <XCircle className="h-4 w-4 text-destructive" />
+                      <span className="text-sm font-medium text-destructive">SLA Breached — Resolution time exceeded.</span>
+                    </div>
+                  )}
+
+                  {/* Messages */}
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground mb-2">Feedback Messages ({c.messages.length})</p>
+                    <div className="space-y-2">
+                      {c.messages.map((m, i) => (
+                        <div key={i} className="bg-card rounded-lg border p-3 space-y-2">
+                          <div className="flex items-center gap-2 text-xs flex-wrap">
+                            <Badge variant="outline" className="text-[10px]">{m.source}</Badge>
+                            <Badge variant="outline" className="text-[10px] bg-muted">{m.language}</Badge>
+                            <span className="text-muted-foreground ml-auto">{m.time}</span>
+                          </div>
+                          <p className="text-sm">{m.text}</p>
+                          {m.translated && (
+                            <p className="text-xs text-muted-foreground italic">→ {m.translated}</p>
                           )}
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-muted-foreground">Sentiment</span>
+                            <Progress value={m.sentimentScore} className="h-1.5 flex-1 [&>div]:bg-destructive" />
+                            <span className="text-[10px] font-medium text-destructive">{m.sentimentScore}%</span>
+                          </div>
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
                 </div>
-
-                {/* Case Info */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <div className="bg-card rounded-lg border p-3">
-                    <p className="text-[11px] text-muted-foreground">Case ID</p>
-                    <p className="text-sm font-semibold">{c.caseId}</p>
-                  </div>
-                  <div className="bg-card rounded-lg border p-3">
-                    <p className="text-[11px] text-muted-foreground">Department</p>
-                    <p className="text-sm font-semibold">{c.department}</p>
-                  </div>
-                  <div className="bg-card rounded-lg border p-3">
-                    <p className="text-[11px] text-muted-foreground">SLA Status</p>
-                    <p className={`text-sm font-semibold ${c.slaStatus === "At Risk" || c.slaStatus === "Breached" ? "text-destructive" : c.slaStatus === "Resolved" ? "text-success" : "text-success"}`}>{c.slaStatus}</p>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                {c.status !== "Resolved" && c.status !== "SLA Breached" && (
-                  <div className="flex items-center gap-3">
-                    {c.status === "Open" && c.timeline.includes("Case Created") && (
-                      <Button size="sm" className="gap-1.5" onClick={() => handleAction(c.id)}>
-                        <Play className="h-3.5 w-3.5" /> Mark Action Taken
-                      </Button>
-                    )}
-                    {c.status === "In Progress" && c.timeline.includes("Action Taken") && (
-                      <Button size="sm" variant="outline" className="gap-1.5 border-success text-success hover:bg-success/10" onClick={() => handleResolve(c.id)}>
-                        <CheckCircle2 className="h-3.5 w-3.5" /> Mark Resolved
-                      </Button>
-                    )}
-                    {c.timeline.includes("Action Taken") && (
-                      <span className={`text-xs font-medium ${c.slaSeconds < 3600 ? "text-destructive" : "text-muted-foreground"}`}>
-                        ⏱ SLA Timer: {formatTime(c.slaSeconds)}
-                      </span>
-                    )}
-                  </div>
-                )}
-
-                {c.status === "SLA Breached" && (
-                  <div className="bg-destructive/10 rounded-lg p-3 flex items-center gap-2">
-                    <XCircle className="h-4 w-4 text-destructive" />
-                    <span className="text-sm font-medium text-destructive">SLA Breached — Resolution time exceeded.</span>
-                  </div>
-                )}
-
-                {/* Messages */}
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-2">Feedback Messages ({c.messages.length})</p>
-                  <div className="space-y-2">
-                    {c.messages.map((m, i) => (
-                      <div key={i} className="bg-card rounded-lg border p-3 space-y-2">
-                        <div className="flex items-center gap-2 text-xs flex-wrap">
-                          <Badge variant="outline" className="text-[10px]">{m.source}</Badge>
-                          <Badge variant="outline" className="text-[10px] bg-muted">{m.language}</Badge>
-                          <span className="text-muted-foreground ml-auto">{m.time}</span>
-                        </div>
-                        <p className="text-sm">{m.text}</p>
-                        {m.translated && (
-                          <p className="text-xs text-muted-foreground italic">→ {m.translated}</p>
-                        )}
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-muted-foreground">Sentiment</span>
-                          <Progress value={m.sentimentScore} className="h-1.5 flex-1 [&>div]:bg-destructive" />
-                          <span className="text-[10px] font-medium text-destructive">{m.sentimentScore}%</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-card rounded-xl border shadow-sm p-12 text-center">
+          <p className="text-muted-foreground text-sm">No cases available. Connect backend to load case clusters.</p>
+        </div>
+      )}
     </div>
   );
 };

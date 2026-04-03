@@ -1,22 +1,26 @@
+import { useState } from "react";
 import { MessageSquare, Briefcase, AlertTriangle, ArrowRight, TrendingDown, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-const stats = [
-  { label: "Total Feedback", value: 1247, icon: MessageSquare, color: "text-primary", borderColor: "border-l-primary" },
-  { label: "Active Departments", value: 8, icon: Building2, color: "text-secondary-foreground", borderColor: "border-l-secondary" },
-  { label: "Open Cases", value: 23, icon: Briefcase, color: "text-warning-foreground", borderColor: "border-l-warning" },
-  { label: "SLA Breaches", value: 4, icon: AlertTriangle, color: "text-destructive", borderColor: "border-l-destructive" },
-];
+export interface StatCard {
+  label: string;
+  value: number;
+  icon: React.ElementType;
+  color: string;
+  borderColor: string;
+}
 
-const alerts = [
-  { text: "Billing complaints surged 40% in the last 6 hours — 12 new negative messages detected.", dept: "billing" },
-  { text: "OPD wait-time sentiment dropped sharply after 2 PM — 8 complaints in 3 hours.", dept: "opd" },
-  { text: "Pharmacy stock-out complaints rising — 5 new messages in 2 hours.", dept: "pharmacy" },
-];
+export interface SpikeAlert {
+  text: string;
+  dept: string;
+}
 
 const DashboardHome = () => {
   const whatsappNumber = "+1 (415) 523-8886";
+
+  const [stats] = useState<StatCard[]>([]);
+  const [alerts] = useState<SpikeAlert[]>([]);
 
   return (
     <div className="space-y-6">
@@ -24,7 +28,7 @@ const DashboardHome = () => {
 
       {/* Summary Cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((s) => (
+        {stats.length > 0 ? stats.map((s) => (
           <div key={s.label} className={`bg-card rounded-xl border border-l-4 ${s.borderColor} shadow-sm p-5 flex items-center gap-4 cursor-default hover:shadow-md transition-shadow`}>
             <div className="w-11 h-11 rounded-lg bg-accent flex items-center justify-center">
               <s.icon className={`h-5 w-5 ${s.color}`} />
@@ -34,7 +38,26 @@ const DashboardHome = () => {
               <p className="text-xs text-muted-foreground">{s.label}</p>
             </div>
           </div>
-        ))}
+        )) : (
+          <>
+            {[
+              { label: "Total Feedback", icon: MessageSquare, color: "text-primary", borderColor: "border-l-primary" },
+              { label: "Active Departments", icon: Building2, color: "text-secondary-foreground", borderColor: "border-l-secondary" },
+              { label: "Open Cases", icon: Briefcase, color: "text-warning-foreground", borderColor: "border-l-warning" },
+              { label: "SLA Breaches", icon: AlertTriangle, color: "text-destructive", borderColor: "border-l-destructive" },
+            ].map((s) => (
+              <div key={s.label} className={`bg-card rounded-xl border border-l-4 ${s.borderColor} shadow-sm p-5 flex items-center gap-4 cursor-default`}>
+                <div className="w-11 h-11 rounded-lg bg-accent flex items-center justify-center">
+                  <s.icon className={`h-5 w-5 ${s.color}`} />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-muted-foreground">--</p>
+                  <p className="text-xs text-muted-foreground">{s.label}</p>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
       </div>
 
       {/* WhatsApp Bot Card */}
@@ -55,21 +78,25 @@ const DashboardHome = () => {
           <AlertTriangle className="h-4 w-4 text-warning" />
           Sentiment Spike Alerts
         </h2>
-        <div className="space-y-3">
-          {alerts.map((a, i) => (
-            <div key={i} className="bg-warning/10 rounded-lg p-3 flex items-start justify-between gap-3">
-              <div className="flex items-start gap-2">
-                <TrendingDown className="h-4 w-4 text-warning mt-0.5 shrink-0" />
-                <p className="text-sm text-foreground">{a.text}</p>
+        {alerts.length > 0 ? (
+          <div className="space-y-3">
+            {alerts.map((a, i) => (
+              <div key={i} className="bg-warning/10 rounded-lg p-3 flex items-start justify-between gap-3">
+                <div className="flex items-start gap-2">
+                  <TrendingDown className="h-4 w-4 text-warning mt-0.5 shrink-0" />
+                  <p className="text-sm text-foreground">{a.text}</p>
+                </div>
+                <Link to={`/dashboard/cases?dept=${a.dept}`}>
+                  <Button variant="outline" size="sm" className="shrink-0 gap-1">
+                    View & Take Action <ArrowRight className="h-3 w-3" />
+                  </Button>
+                </Link>
               </div>
-              <Link to={`/dashboard/cases?dept=${a.dept}`}>
-                <Button variant="outline" size="sm" className="shrink-0 gap-1">
-                  View & Take Action <ArrowRight className="h-3 w-3" />
-                </Button>
-              </Link>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground text-center py-4">No active alerts. Connect backend to receive real-time spike notifications.</p>
+        )}
       </div>
 
       {/* Quick Links */}
