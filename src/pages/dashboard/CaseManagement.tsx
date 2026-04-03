@@ -282,7 +282,7 @@ const CaseManagement = () => {
                         <CheckCircle2 className="h-3.5 w-3.5" /> Mark Resolved
                       </Button>
                     )}
-                    {c.timeline.includes("Action Taken") && c.status !== "Resolved" && (
+                    {c.timeline.includes("Action Taken") && (
                       <span className={`text-xs font-medium ${c.slaSeconds < 3600 ? "text-destructive" : "text-muted-foreground"}`}>
                         ⏱ SLA Timer: {formatTime(c.slaSeconds)}
                       </span>
