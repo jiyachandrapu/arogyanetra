@@ -45,7 +45,7 @@ const initialClusters: Cluster[] = [
   },
   {
     id: "2", caseId: "CASE-002", title: "Billing Overcharge Complaints", department: "Billing & Accounts", deptId: "billing",
-    priority: "High", status: "In Progress", hasSurge: true, complaintCount: 9, slaSeconds: 7800, sentimentScore: 30,
+    priority: "High", status: "In Progress", hasSurge: true, complaintCount: 9, slaSeconds: 7800, slaRunning: false, sentimentScore: 30,
     slaStatus: "At Risk",
     timeline: ["Detected", "Case Created", "Action Taken"],
     messages: [
