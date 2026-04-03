@@ -55,7 +55,7 @@ const initialClusters: Cluster[] = [
   },
   {
     id: "3", caseId: "CASE-003", title: "Pharmacy Stock-Out Issues", department: "Pharmacy", deptId: "pharmacy",
-    priority: "Medium", status: "Open", hasSurge: false, complaintCount: 6, slaSeconds: 64800, sentimentScore: 40,
+    priority: "Medium", status: "Open", hasSurge: false, complaintCount: 6, slaSeconds: 64800, slaRunning: false, sentimentScore: 40,
     slaStatus: "On Track",
     timeline: ["Detected", "Case Created"],
     messages: [
