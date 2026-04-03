@@ -35,7 +35,7 @@ export interface Cluster {
 const initialClusters: Cluster[] = [
   {
     id: "1", caseId: "CASE-001", title: "Excessive Wait Time in OPD", department: "Outpatient Department", deptId: "opd",
-    priority: "High", status: "Open", hasSurge: true, complaintCount: 14, slaSeconds: 15600, sentimentScore: 22,
+    priority: "High", status: "Open", hasSurge: true, complaintCount: 14, slaSeconds: 15600, slaRunning: false, sentimentScore: 22,
     slaStatus: "On Track",
     timeline: ["Detected", "Case Created"],
     messages: [
