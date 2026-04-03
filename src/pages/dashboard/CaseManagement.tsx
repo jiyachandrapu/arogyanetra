@@ -147,6 +147,7 @@ const CaseManagement = () => {
           ...c,
           status: "In Progress" as const,
           timeline: [...c.timeline, "Action Taken" as const],
+          slaRunning: true,
         };
       }
       return c;
