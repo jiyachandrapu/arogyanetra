@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, AlertTriangle, ArrowRight, Minus } from "lucide-react";
@@ -16,17 +17,6 @@ export interface Department {
   recentSpike: string | null;
 }
 
-const departments: Department[] = [
-  { id: "opd", name: "Outpatient Department", shortName: "OPD", issueCount: 12, slaBreaches: 2, sentimentTrend: "down", hasSurge: true, totalFeedback: 340, resolvedToday: 5, recentSpike: "Wait-time complaints surged after 2 PM" },
-  { id: "billing", name: "Billing & Accounts", shortName: "Billing", issueCount: 8, slaBreaches: 1, sentimentTrend: "down", hasSurge: true, totalFeedback: 210, resolvedToday: 3, recentSpike: "Overcharge complaints rising since morning" },
-  { id: "pharmacy", name: "Pharmacy", shortName: "Pharmacy", issueCount: 6, slaBreaches: 1, sentimentTrend: "stable", hasSurge: false, totalFeedback: 180, resolvedToday: 4, recentSpike: "Stock-out complaints for common medicines" },
-  { id: "nursing", name: "Nursing Care", shortName: "Nursing", issueCount: 4, slaBreaches: 0, sentimentTrend: "up", hasSurge: false, totalFeedback: 150, resolvedToday: 6, recentSpike: null },
-  { id: "emergency", name: "Emergency Department", shortName: "ER", issueCount: 9, slaBreaches: 3, sentimentTrend: "down", hasSurge: true, totalFeedback: 290, resolvedToday: 2, recentSpike: "Triage delay complaints spiking" },
-  { id: "radiology", name: "Radiology", shortName: "Radiology", issueCount: 3, slaBreaches: 0, sentimentTrend: "up", hasSurge: false, totalFeedback: 95, resolvedToday: 3, recentSpike: null },
-  { id: "laboratory", name: "Laboratory Services", shortName: "Lab", issueCount: 5, slaBreaches: 0, sentimentTrend: "stable", hasSurge: false, totalFeedback: 120, resolvedToday: 4, recentSpike: null },
-  { id: "facilities", name: "Facilities & Maintenance", shortName: "Facilities", issueCount: 7, slaBreaches: 1, sentimentTrend: "down", hasSurge: false, totalFeedback: 160, resolvedToday: 2, recentSpike: "Cleanliness complaints in ward block B" },
-];
-
 const trendIcon = (t: string) => {
   if (t === "up") return <TrendingUp className="h-4 w-4 text-success" />;
   if (t === "down") return <TrendingDown className="h-4 w-4 text-destructive" />;
@@ -42,6 +32,7 @@ const borderColor = (dept: Department) => {
 
 const Departments = () => {
   const navigate = useNavigate();
+  const [departments] = useState<Department[]>([]);
 
   return (
     <div className="space-y-6">
@@ -50,62 +41,68 @@ const Departments = () => {
         <p className="text-sm text-muted-foreground mt-1">Real-time operational risk across all departments.</p>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {departments.map((dept) => (
-          <HoverCard key={dept.id} openDelay={200} closeDelay={100}>
-            <HoverCardTrigger asChild>
-              <button
-                onClick={() => navigate(`/dashboard/cases?dept=${dept.id}`)}
-                className={`bg-card rounded-xl border border-l-4 ${borderColor(dept)} shadow-sm p-5 text-left hover:shadow-md hover:border-primary/30 transition-all duration-200 w-full group`}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <p className="font-semibold text-sm">{dept.name}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{dept.shortName}</p>
+      {departments.length > 0 ? (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {departments.map((dept) => (
+            <HoverCard key={dept.id} openDelay={200} closeDelay={100}>
+              <HoverCardTrigger asChild>
+                <button
+                  onClick={() => navigate(`/dashboard/cases?dept=${dept.id}`)}
+                  className={`bg-card rounded-xl border border-l-4 ${borderColor(dept)} shadow-sm p-5 text-left hover:shadow-md hover:border-primary/30 transition-all duration-200 w-full group`}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <p className="font-semibold text-sm">{dept.name}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{dept.shortName}</p>
+                    </div>
+                    {dept.hasSurge && (
+                      <Badge variant="outline" className="bg-destructive/10 text-destructive text-[10px] px-1.5 py-0.5 animate-pulse">
+                        SURGE
+                      </Badge>
+                    )}
                   </div>
-                  {dept.hasSurge && (
-                    <Badge variant="outline" className="bg-destructive/10 text-destructive text-[10px] px-1.5 py-0.5 animate-pulse">
-                      SURGE
-                    </Badge>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">Open Issues</span>
+                      <span className="font-semibold">{dept.issueCount}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">SLA Breaches</span>
+                      <span className={`font-semibold ${dept.slaBreaches > 0 ? "text-destructive" : "text-success"}`}>{dept.slaBreaches}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">Sentiment</span>
+                      {trendIcon(dept.sentimentTrend)}
+                    </div>
+                  </div>
+
+                  <div className="mt-3 pt-3 border-t flex items-center justify-end text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    View Clusters <ArrowRight className="h-3 w-3 ml-1" />
+                  </div>
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-64 p-4 space-y-2" side="right">
+                <p className="font-semibold text-sm">{dept.name} — Details</p>
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex justify-between"><span className="text-muted-foreground">Total Feedback</span><span className="font-medium">{dept.totalFeedback}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">Cases Resolved Today</span><span className="font-medium text-success">{dept.resolvedToday}</span></div>
+                  {dept.recentSpike && (
+                    <div className="bg-warning/10 rounded-md p-2 mt-2 flex items-start gap-1.5">
+                      <AlertTriangle className="h-3 w-3 text-warning mt-0.5 shrink-0" />
+                      <span className="text-warning-foreground text-[11px]">{dept.recentSpike}</span>
+                    </div>
                   )}
                 </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Open Issues</span>
-                    <span className="font-semibold">{dept.issueCount}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">SLA Breaches</span>
-                    <span className={`font-semibold ${dept.slaBreaches > 0 ? "text-destructive" : "text-success"}`}>{dept.slaBreaches}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Sentiment</span>
-                    {trendIcon(dept.sentimentTrend)}
-                  </div>
-                </div>
-
-                <div className="mt-3 pt-3 border-t flex items-center justify-end text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  View Clusters <ArrowRight className="h-3 w-3 ml-1" />
-                </div>
-              </button>
-            </HoverCardTrigger>
-            <HoverCardContent className="w-64 p-4 space-y-2" side="right">
-              <p className="font-semibold text-sm">{dept.name} — Details</p>
-              <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between"><span className="text-muted-foreground">Total Feedback</span><span className="font-medium">{dept.totalFeedback}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Cases Resolved Today</span><span className="font-medium text-success">{dept.resolvedToday}</span></div>
-                {dept.recentSpike && (
-                  <div className="bg-warning/10 rounded-md p-2 mt-2 flex items-start gap-1.5">
-                    <AlertTriangle className="h-3 w-3 text-warning mt-0.5 shrink-0" />
-                    <span className="text-warning-foreground text-[11px]">{dept.recentSpike}</span>
-                  </div>
-                )}
-              </div>
-            </HoverCardContent>
-          </HoverCard>
-        ))}
-      </div>
+              </HoverCardContent>
+            </HoverCard>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-card rounded-xl border shadow-sm p-12 text-center">
+          <p className="text-muted-foreground text-sm">No departments available. Connect backend to load department data.</p>
+        </div>
+      )}
     </div>
   );
 };
