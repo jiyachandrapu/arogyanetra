@@ -124,7 +124,7 @@ const CaseManagement = () => {
     const interval = setInterval(() => {
       setClusters(prev => prev.map(c => {
         if (c.status === "Resolved" || c.status === "SLA Breached") return c;
-        if (!c.timeline.includes("Action Taken")) return c;
+        if (!c.slaRunning) return c;
         const newSeconds = c.slaSeconds - 1;
         if (newSeconds <= 0) {
           return { ...c, slaSeconds: 0, status: "SLA Breached" as const, slaStatus: "Breached" };
