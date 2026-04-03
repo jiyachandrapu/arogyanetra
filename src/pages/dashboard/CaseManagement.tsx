@@ -64,7 +64,7 @@ const initialClusters: Cluster[] = [
   },
   {
     id: "4", caseId: "CASE-004", title: "Emergency Triage Delays", department: "Emergency Department", deptId: "emergency",
-    priority: "High", status: "Open", hasSurge: true, complaintCount: 11, slaSeconds: 6300, sentimentScore: 15,
+    priority: "High", status: "Open", hasSurge: true, complaintCount: 11, slaSeconds: 6300, slaRunning: false, sentimentScore: 15,
     slaStatus: "At Risk",
     timeline: ["Detected", "Case Created"],
     messages: [
