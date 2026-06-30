@@ -32,7 +32,56 @@ const caseBorder = (c: ResolvedCase) => {
 
 const ResolvedCases = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [cases] = useState<ResolvedCase[]>([]);
+  const [cases] = useState<ResolvedCase[]>([
+    {
+      id: "r1",
+      caseId: "CASE-R001",
+      department: "OPD",
+      title: "Wait Time Optimization — Phase 1",
+      resolvedDate: "Mar 20, 2026",
+      state: "Stable",
+      newComplaints: 0,
+      sentimentChange: 12,
+      hasSpikeWarning: false,
+      sentimentData: [{ day: "D1", score: 45 }, { day: "D3", score: 50 }, { day: "D5", score: 58 }, { day: "D7", score: 62 }, { day: "D10", score: 68 }, { day: "D14", score: 72 }],
+    },
+    {
+      id: "r2",
+      caseId: "CASE-R002",
+      department: "Billing",
+      title: "Duplicate Charge Fix",
+      resolvedDate: "Mar 22, 2026",
+      state: "Positive Reinforcement",
+      newComplaints: 0,
+      sentimentChange: 18,
+      hasSpikeWarning: false,
+      sentimentData: [{ day: "D1", score: 40 }, { day: "D3", score: 52 }, { day: "D5", score: 60 }, { day: "D7", score: 70 }, { day: "D10", score: 78 }, { day: "D14", score: 85 }],
+    },
+    {
+      id: "r3",
+      caseId: "CASE-R003",
+      department: "Pharmacy",
+      title: "Medicine Availability Issue",
+      resolvedDate: "Mar 25, 2026",
+      state: "Recurring Issue",
+      newComplaints: 3,
+      sentimentChange: -5,
+      hasSpikeWarning: true,
+      sentimentData: [{ day: "D1", score: 55 }, { day: "D3", score: 50 }, { day: "D5", score: 48 }, { day: "D7", score: 42 }, { day: "D10", score: 45 }, { day: "D14", score: 40 }],
+    },
+    {
+      id: "r4",
+      caseId: "CASE-R004",
+      department: "Emergency",
+      title: "Triage Protocol Update",
+      resolvedDate: "Mar 18, 2026",
+      state: "Negative Spike",
+      newComplaints: 6,
+      sentimentChange: -15,
+      hasSpikeWarning: true,
+      sentimentData: [{ day: "D1", score: 50 }, { day: "D3", score: 45 }, { day: "D5", score: 38 }, { day: "D7", score: 30 }, { day: "D10", score: 25 }, { day: "D14", score: 20 }],
+    },
+  ]);
 
   return (
     <div className="space-y-6">

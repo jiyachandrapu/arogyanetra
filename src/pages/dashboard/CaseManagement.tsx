@@ -61,8 +61,109 @@ const clusterBorder = (c: Cluster) => {
 
 const timelineSteps: ("Detected" | "Case Created" | "Action Taken" | "Resolved")[] = ["Detected", "Case Created", "Action Taken", "Resolved"];
 
+const initialClusters: Cluster[] = [
+  {
+    id: "1",
+    caseId: "CASE-001",
+    title: "Excessive Wait Time in OPD",
+    department: "Outpatient Department",
+    deptId: "opd",
+    priority: "High",
+    status: "Open",
+    hasSurge: true,
+    complaintCount: 14,
+    slaSeconds: 15600,
+    slaRunning: false,
+    sentimentScore: 22,
+    slaStatus: "On Track",
+    timeline: ["Detected", "Case Created"],
+    messages: [
+      { source: "WhatsApp", language: "Hindi", time: "2:45 PM", text: "3 ghante se wait kar raha hoon, koi response nahi", translated: "Waiting for 3 hours, no response", sentimentScore: 18 },
+      { source: "Email", language: "English", time: "3:10 PM", text: "The wait time at OPD is unacceptable. I've been here since morning.", sentimentScore: 25 },
+    ],
+  },
+  {
+    id: "2",
+    caseId: "CASE-002",
+    title: "Billing Overcharge Complaints",
+    department: "Billing & Accounts",
+    deptId: "billing",
+    priority: "High",
+    status: "In Progress",
+    hasSurge: true,
+    complaintCount: 9,
+    slaSeconds: 7800,
+    slaRunning: false,
+    sentimentScore: 30,
+    slaStatus: "At Risk",
+    timeline: ["Detected", "Case Created", "Action Taken"],
+    messages: [
+      { source: "WhatsApp", language: "English", time: "11:30 AM", text: "I was charged ₹5000 extra for a basic blood test. This is fraud!", sentimentScore: 12 },
+      { source: "WhatsApp", language: "Tamil", time: "12:15 PM", text: "Bill la extra amount potrukanga", translated: "Extra amount added in the bill", sentimentScore: 28 },
+    ],
+  },
+  {
+    id: "3",
+    caseId: "CASE-003",
+    title: "Pharmacy Stock-Out Issues",
+    department: "Pharmacy",
+    deptId: "pharmacy",
+    priority: "Medium",
+    status: "Open",
+    hasSurge: false,
+    complaintCount: 6,
+    slaSeconds: 64800,
+    slaRunning: false,
+    sentimentScore: 40,
+    slaStatus: "On Track",
+    timeline: ["Detected", "Case Created"],
+    messages: [
+      { source: "Email", language: "English", time: "9:00 AM", text: "Common medicines like paracetamol are out of stock. Had to buy from outside.", sentimentScore: 35 },
+    ],
+  },
+  {
+    id: "4",
+    caseId: "CASE-004",
+    title: "Emergency Triage Delays",
+    department: "Emergency Department",
+    deptId: "emergency",
+    priority: "High",
+    status: "Open",
+    hasSurge: true,
+    complaintCount: 11,
+    slaSeconds: 6300,
+    slaRunning: false,
+    sentimentScore: 15,
+    slaStatus: "At Risk",
+    timeline: ["Detected", "Case Created"],
+    messages: [
+      { source: "WhatsApp", language: "English", time: "4:30 PM", text: "My father was having chest pain and we waited 40 minutes before anyone attended!", sentimentScore: 10 },
+      { source: "WhatsApp", language: "Hindi", time: "5:00 PM", text: "Emergency mein bhi koi nahi dekh raha", translated: "Nobody is attending even in emergency", sentimentScore: 15 },
+    ],
+  },
+  {
+    id: "5",
+    caseId: "CASE-005",
+    title: "Cleanliness Issues in Ward B",
+    department: "Facilities & Maintenance",
+    deptId: "facilities",
+    priority: "Medium",
+    status: "In Progress",
+    hasSurge: false,
+    complaintCount: 5,
+    slaSeconds: 43200,
+    slaRunning: false,
+    sentimentScore: 38,
+    slaStatus: "On Track",
+    timeline: ["Detected", "Case Created", "Action Taken"],
+    messages: [
+      { source: "Email", language: "English", time: "8:00 AM", text: "The washrooms in ward B are extremely dirty. Needs immediate attention.", sentimentScore: 32 },
+    ],
+  },
+];
+
 const CaseManagement = () => {
-  const [clusters, setClusters] = useState<Cluster[]>([]);
+  const [clusters, setClusters] = useState<Cluster[]>(initialClusters);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
