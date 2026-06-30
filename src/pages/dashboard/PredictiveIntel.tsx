@@ -48,12 +48,47 @@ const riskColor = (l: string) => {
 };
 
 const PredictiveIntel = () => {
-  const [forecastData] = useState<ForecastPoint[]>([]);
-  const [riskRanking] = useState<RiskEntry[]>([]);
-  const [recurringPatterns] = useState<RecurringPattern[]>([]);
-  const [anomalies] = useState<Anomaly[]>([]);
-  const [persistentProblems] = useState<PersistentProblem[]>([]);
-  const [surgeProbabilities] = useState<SurgeProbability[]>([]);
+  const [forecastData] = useState<ForecastPoint[]>([
+    { day: "Mon", predicted: 35, actual: 32 },
+    { day: "Tue", predicted: 42, actual: 45 },
+    { day: "Wed", predicted: 38, actual: 40 },
+    { day: "Thu", predicted: 50, actual: 48 },
+    { day: "Fri", predicted: 55, actual: null },
+    { day: "Sat", predicted: 45, actual: null },
+    { day: "Sun", predicted: 30, actual: null },
+  ]);
+  const [riskRanking] = useState<RiskEntry[]>([
+    { dept: "Emergency", risk: 85, level: "High", surge: true },
+    { dept: "OPD", risk: 72, level: "High", surge: true },
+    { dept: "Billing", risk: 65, level: "Medium", surge: false },
+    { dept: "Facilities", risk: 55, level: "Medium", surge: false },
+    { dept: "Pharmacy", risk: 48, level: "Medium", surge: false },
+    { dept: "Nursing", risk: 25, level: "Low", surge: false },
+    { dept: "Radiology", risk: 20, level: "Low", surge: false },
+    { dept: "Laboratory", risk: 15, level: "Low", surge: false },
+  ]);
+  const [recurringPatterns] = useState<RecurringPattern[]>([
+    { pattern: "OPD wait-time complaints peak between 2–5 PM daily", department: "OPD", frequency: "Daily", mitigation: "Consider adding afternoon shift doctors or token-based queue system" },
+    { pattern: "Billing discrepancy complaints spike on Mondays", department: "Billing", frequency: "Weekly", mitigation: "Weekend audit of auto-generated bills recommended" },
+    { pattern: "Pharmacy stock-out for common medicines every 2 weeks", department: "Pharmacy", frequency: "Bi-weekly", mitigation: "Automate reorder triggers for high-demand medications" },
+  ]);
+  const [anomalies] = useState<Anomaly[]>([
+    { title: "Unusual ER complaint volume", description: "Emergency complaints increased 300% compared to baseline — possible external event or staffing issue.", severity: "High" },
+    { title: "Billing sentiment anomaly", description: "Negative sentiment in billing dropped suddenly despite no known policy changes — requires investigation.", severity: "Medium" },
+  ]);
+  const [persistentProblems] = useState<PersistentProblem[]>([
+    { issue: "Wheelchair availability at entrance", department: "Facilities", days: 21 },
+    { issue: "AC not working in Ward B", department: "Facilities", days: 14 },
+    { issue: "Long discharge process time", department: "OPD", days: 10 },
+  ]);
+  const [surgeProbabilities] = useState<SurgeProbability[]>([
+    { dept: "Emergency", probability: 82 },
+    { dept: "OPD", probability: 68 },
+    { dept: "Billing", probability: 55 },
+    { dept: "Pharmacy", probability: 40 },
+    { dept: "Facilities", probability: 35 },
+    { dept: "Nursing", probability: 15 },
+  ]);
 
   const EmptyState = ({ text }: { text: string }) => (
     <div className="py-8 text-center">
