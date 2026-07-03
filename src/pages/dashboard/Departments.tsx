@@ -32,16 +32,7 @@ const borderColor = (dept: Department) => {
 
 const Departments = () => {
   const navigate = useNavigate();
-  const [departments] = useState<Department[]>([
-    { id: "opd", name: "Outpatient Department", shortName: "OPD", issueCount: 12, slaBreaches: 2, sentimentTrend: "down", hasSurge: true, totalFeedback: 340, resolvedToday: 5, recentSpike: "Wait-time complaints surged after 2 PM" },
-    { id: "billing", name: "Billing & Accounts", shortName: "Billing", issueCount: 8, slaBreaches: 1, sentimentTrend: "down", hasSurge: true, totalFeedback: 210, resolvedToday: 3, recentSpike: "Overcharge complaints rising since morning" },
-    { id: "pharmacy", name: "Pharmacy", shortName: "Pharmacy", issueCount: 6, slaBreaches: 1, sentimentTrend: "stable", hasSurge: false, totalFeedback: 180, resolvedToday: 4, recentSpike: "Stock-out complaints for common medicines" },
-    { id: "nursing", name: "Nursing Care", shortName: "Nursing", issueCount: 4, slaBreaches: 0, sentimentTrend: "up", hasSurge: false, totalFeedback: 150, resolvedToday: 6, recentSpike: null },
-    { id: "emergency", name: "Emergency Department", shortName: "ER", issueCount: 9, slaBreaches: 3, sentimentTrend: "down", hasSurge: true, totalFeedback: 290, resolvedToday: 2, recentSpike: "Triage delay complaints spiking" },
-    { id: "radiology", name: "Radiology", shortName: "Radiology", issueCount: 3, slaBreaches: 0, sentimentTrend: "up", hasSurge: false, totalFeedback: 95, resolvedToday: 3, recentSpike: null },
-    { id: "laboratory", name: "Laboratory Services", shortName: "Lab", issueCount: 5, slaBreaches: 0, sentimentTrend: "stable", hasSurge: false, totalFeedback: 120, resolvedToday: 4, recentSpike: null },
-    { id: "facilities", name: "Facilities & Maintenance", shortName: "Facilities", issueCount: 7, slaBreaches: 1, sentimentTrend: "down", hasSurge: false, totalFeedback: 160, resolvedToday: 2, recentSpike: "Cleanliness complaints in ward block B" },
-  ]);
+  const [departments] = useState<Department[]>([]);
 
   return (
     <div className="space-y-6">

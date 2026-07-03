@@ -11,16 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
-const initialPatients = [
-  { id: "P-1001", name: "Rajesh Kumar", phone: "+91 98765 43210", lastFeedback: "2 hours ago" },
-  { id: "P-1002", name: "Priya Sharma", phone: "+91 87654 32109", lastFeedback: "5 hours ago" },
-  { id: "P-1003", name: "Arun Patel", phone: "+91 76543 21098", lastFeedback: "1 day ago" },
-  { id: "P-1004", name: "Lakshmi Devi", phone: "+91 65432 10987", lastFeedback: "2 days ago" },
-  { id: "P-1005", name: "Mohammed Ali", phone: "+91 54321 09876", lastFeedback: "3 days ago" },
-];
+export interface Patient { id: string; name: string; phone: string; lastFeedback: string; }
 
 const PatientManagement = () => {
-  const [patients] = useState(initialPatients);
+  const [patients] = useState<Patient[]>([]);
 
   return (
     <div className="space-y-6">
@@ -52,14 +46,16 @@ const PatientManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {patients.map((p) => (
+            {patients.length > 0 ? patients.map((p) => (
               <tr key={p.id} className="border-t hover:bg-muted/30 transition-colors">
                 <td className="px-4 py-3 font-mono text-xs">{p.id}</td>
                 <td className="px-4 py-3">{p.name}</td>
                 <td className="px-4 py-3 text-muted-foreground">{p.phone}</td>
                 <td className="px-4 py-3 text-muted-foreground">{p.lastFeedback}</td>
               </tr>
-            ))}
+            )) : (
+              <tr><td colSpan={4} className="px-4 py-12 text-center text-sm text-muted-foreground">No patients yet. Connect backend to load patient data.</td></tr>
+            )}
           </tbody>
         </table>
       </div>

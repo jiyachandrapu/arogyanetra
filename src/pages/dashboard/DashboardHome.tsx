@@ -19,17 +19,8 @@ export interface SpikeAlert {
 const DashboardHome = () => {
   const whatsappNumber = "+1 (415) 523-8886";
 
-  const [stats] = useState<StatCard[]>([
-    { label: "Total Feedback", value: 1247, icon: MessageSquare, color: "text-primary", borderColor: "border-l-primary" },
-    { label: "Active Departments", value: 8, icon: Building2, color: "text-secondary-foreground", borderColor: "border-l-secondary" },
-    { label: "Open Cases", value: 23, icon: Briefcase, color: "text-warning-foreground", borderColor: "border-l-warning" },
-    { label: "SLA Breaches", value: 4, icon: AlertTriangle, color: "text-destructive", borderColor: "border-l-destructive" },
-  ]);
-  const [alerts] = useState<SpikeAlert[]>([
-    { text: "Billing complaints surged 40% in the last 6 hours — 12 new negative messages detected.", dept: "billing" },
-    { text: "OPD wait-time sentiment dropped sharply after 2 PM — 8 complaints in 3 hours.", dept: "opd" },
-    { text: "Pharmacy stock-out complaints rising — 5 new messages in 2 hours.", dept: "pharmacy" },
-  ]);
+  const [stats] = useState<StatCard[]>([]);
+  const [alerts] = useState<SpikeAlert[]>([]);
 
   return (
     <div className="space-y-6">
